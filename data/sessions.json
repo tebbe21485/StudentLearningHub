@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2025-09-01",
+    "time": "4:00 PM",
+    "subject": "Math - Algebra Study Group",
+    "tutor": "Sarah L."
+  },
+  {
+    "date": "2025-09-02",
+    "time": "5:30 PM",
+    "subject": "Science - Physics Review",
+    "tutor": "Jason M."
+  },
+  {
+    "date": "2025-09-03",
+    "time": "7:00 PM",
+    "subject": "History - Unit 2 Prep",
+    "tutor": "Ava R."
+  },
+  {
+    "date": "2025-09-11",
+    "time": "5:00 PM",
+    "subject": "Math - Unit 2 Prep",
+    "tutor": "Sarah L."
+  }
+]

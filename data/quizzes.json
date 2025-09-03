@@ -1,0 +1,22 @@
+{
+  "questions": [
+    {
+      "prompt": "What is 2 + 2?",
+      "choices": [
+        "3",
+        "4",
+        "5"
+      ],
+      "answerIndex": 1
+    },
+    {
+      "prompt": "Solve: 3x = 12. x = ?",
+      "choices": [
+        "2",
+        "3",
+        "4"
+      ],
+      "answerIndex": 2
+    }
+  ]
+}

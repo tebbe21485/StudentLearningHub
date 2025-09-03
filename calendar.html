@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendar • Student Learning Hub</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <script defer src="assets/js/include.js"></script>
+  <script defer src="assets/js/nav.js"></script>
+  <script defer src="assets/js/calendar.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main class="container">
+    <h1>Calendar</h1>
+    <div class="calendar-controls">
+      <button id="prev-month">Prev</button>
+      <h2 id="calendar-month"></h2>
+      <button id="next-month">Next</button>
+    </div>
+
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th>Sunday</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+        </tr>
+      </thead>
+      <tbody id="calendar-body"></tbody>
+    </table>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>
