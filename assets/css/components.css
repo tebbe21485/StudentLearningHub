@@ -1,7 +1,37 @@
 /* Component-specific styles: cards, tables, forms, nav refinements */
-.form-row { display: grid; gap: .75rem; grid-template-columns: 1fr; }
-@media (min-width: 600px) { .form-row { grid-template-columns: 1fr 1fr; } }
-label { font-weight: 600; }
-input, select, textarea, button { font: inherit; padding: .5rem; border: 1px solid #d1d5db; border-radius: .5rem; }
-button { cursor: pointer; }
-.notice { background: #f8fafc; border-left: 4px solid var(--brand); padding: .75rem 1rem; border-radius: .25rem; }
+.form-row {
+    display: grid;
+    gap: .75rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+label {
+    font-weight: 600;
+}
+
+input,
+select,
+textarea,
+button {
+    font: inherit;
+    padding: .5rem;
+    border: 1px solid #d1d5db;
+    border-radius: .5rem;
+}
+
+button {
+    cursor: pointer;
+}
+
+.notice {
+    background: #f8fafc;
+    border-left: 4px solid var(--brand);
+    padding: .75rem 1rem;
+    border-radius: .25rem;
+}

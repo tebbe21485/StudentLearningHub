@@ -3,8 +3,16 @@
   --pad: 1rem;
   --brand: #1f4fd1;
 }
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -12,44 +20,183 @@ body {
   color: #111827;
   background: #ffffff;
 }
-.container { max-width: var(--maxw); margin-inline: auto; padding: var(--pad); }
-img { max-width: 100%; display: block; }
-.site-header { border-bottom: 1px solid #e5e7eb; background: #fff; }
-.site-footer { border-top: 1px solid #e5e7eb; background: #fafafa; margin-top: 2rem; }
-.brand { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; font-weight: 700; }
-.nav { display: flex; gap: 1rem; list-style: none; padding-left: 0; margin: 0; }
-.nav a { text-decoration: none; color: #111; padding: .5rem .75rem; border-radius: .5rem; }
-.nav a[aria-current="page"] { background: #eef2ff; color: var(--brand); }
-.nav-toggle { display: none; }
-@media (max-width: 720px) {
-  .nav { display: none; flex-direction: column; padding: .5rem 0; }
-  .nav-toggle { display: inline-block; }
-  .nav[data-open="true"] { display: flex; }
+
+.container {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: var(--pad);
 }
-.hero { padding: 2rem 0; }
-.btn { display: inline-block; padding: .6rem 1rem; background: var(--brand); color: #fff; border-radius: .5rem; text-decoration: none; }
-.btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); }
-.card { border: 1px solid #e5e7eb; border-radius: .75rem; padding: 1rem; background: #fff; }
-.grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-@media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #e5e7eb; padding: .5rem; text-align: left; }
-progress { width: 100%; height: 1rem; }
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.site-header {
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.site-footer {
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+  margin-top: 2rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #111;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
+}
+
+.nav a[aria-current="page"] {
+  background: #eef2ff;
+  color: var(--brand);
+}
+
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .nav {
+    display: none;
+    flex-direction: column;
+    padding: .5rem 0;
+  }
+
+  .nav-toggle {
+    display: inline-block;
+  }
+
+  .nav[data-open="true"] {
+    display: flex;
+  }
+}
+
+.hero {
+  padding: 2rem 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: .6rem 1rem;
+  background: var(--brand);
+  color: #fff;
+  border-radius: .5rem;
+  text-decoration: none;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: .75rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #e5e7eb;
+  padding: .5rem;
+  text-align: left;
+}
+
+progress {
+  width: 100%;
+  height: 1rem;
+}
 
 /* Calendar styles */
-.calendar-controls { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
-.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.5rem; }
-.calendar-cell { border:1px solid #e5e7eb; border-radius:.5rem; padding:.5rem; min-height:90px; background:#fff; }
-.calendar-cell .date { font-weight:700; font-size:.9rem; margin-bottom:.25rem; }
-.event { font-size:.85rem; margin:.25rem 0; }
-.event .actions a { font-size:.8rem; margin-right:.25rem; }
+.calendar-controls {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .5rem;
+}
+
+.calendar-cell {
+  border: 1px solid #e5e7eb;
+  border-radius: .5rem;
+  padding: .5rem;
+  min-height: 90px;
+  background: #fff;
+}
+
+.calendar-cell .date {
+  font-weight: 700;
+  font-size: .9rem;
+  margin-bottom: .25rem;
+}
+
+.event {
+  font-size: .85rem;
+  margin: .25rem 0;
+}
+
+.event .actions a {
+  font-size: .8rem;
+  margin-right: .25rem;
+}
 
 /* Calendar table: equal column widths, equal row heights */
 .calendar-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;              /* makes all 7 columns equal width */
+  table-layout: fixed;
+  /* makes all 7 columns equal width */
   margin-bottom: 1rem;
 }
 
@@ -58,7 +205,8 @@ progress { width: 100%; height: 1rem; }
   border: 1px solid #e5e7eb;
   vertical-align: top;
   padding: .5rem;
-  width: 14.2857%;                  /* 100/7 */
+  width: 14.2857%;
+  /* 100/7 */
 }
 
 .calendar-table th {
@@ -69,12 +217,24 @@ progress { width: 100%; height: 1rem; }
 
 /* Force all day cells to the same height; scroll if content is long */
 .calendar-table td {
-  height: 130px;                    /* pick a height that looks good for you */
-  overflow: auto;                   /* if many events, the cell scrolls */
+  height: 130px;
+  /* pick a height that looks good for you */
+  overflow: auto;
+  /* if many events, the cell scrolls */
 }
 
 /* Keep your existing styles */
-.calendar-table .date { font-weight: 700; margin-bottom: .25rem; }
-.event { font-size: .85rem; margin: .25rem 0; }
-.event a { font-size: .8rem; color: var(--brand); }
+.calendar-table .date {
+  font-weight: 700;
+  margin-bottom: .25rem;
+}
 
+.event {
+  font-size: .85rem;
+  margin: .25rem 0;
+}
+
+.event a {
+  font-size: .8rem;
+  color: var(--brand);
+}
