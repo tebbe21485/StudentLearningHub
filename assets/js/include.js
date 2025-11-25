@@ -27,7 +27,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Mark active navigation link
   const map = {
     'index.html': 'home',
-    'schedule.html': 'schedule',
     'dashboard.html': 'dashboard',
     'resources.html': 'resources',
     'about.html': 'about'

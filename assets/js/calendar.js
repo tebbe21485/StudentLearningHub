@@ -1,39 +1,39 @@
 // Calendar that renders as a single table
-(async function(){
-  async function loadSessions(){
+(async function () {
+  async function loadSessions() {
     const res = await fetch("data/sessions.json");
     return await res.json();
   }
 
-  function toDate(dateStr, timeStr){
+  function toDate(dateStr, timeStr) {
     const [y, m, d] = dateStr.split("-").map(Number);
     let [t, ampm] = timeStr.split(" ");
     let [hh, mm] = t.split(":").map(Number);
     if (ampm.toUpperCase() === "PM" && hh < 12) hh += 12;
     if (ampm.toUpperCase() === "AM" && hh === 12) hh = 0;
-    return new Date(y, m-1, d, hh, mm);
+    return new Date(y, m - 1, d, hh, mm);
   }
 
-  function formatGoogleLink(event){
+  function formatGoogleLink(event) {
     const start = toDate(event.date, event.time);
-    const end = new Date(start.getTime() + 60*60*1000); // +1h
-    function fmt(d){
-      return d.toISOString().replace(/[-:]/g, "").split(".")[0]+"Z";
+    const end = new Date(start.getTime() + 60 * 60 * 1000); // +1h
+    function fmt(d) {
+      return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     }
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.subject)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent("Tutor: "+event.tutor)}`;
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.subject)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent("Tutor: " + event.tutor)}`;
   }
 
-  function renderCalendar(sessions, monthOffset=0){
+  function renderCalendar(sessions, monthOffset = 0) {
     const today = new Date();
-    const viewDate = new Date(today.getFullYear(), today.getMonth()+monthOffset, 1);
+    const viewDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
     const month = viewDate.getMonth();
     const year = viewDate.getFullYear();
 
     document.getElementById("calendar-month").textContent =
-      viewDate.toLocaleString("default", {month:"long", year:"numeric"});
+      viewDate.toLocaleString("default", { month: "long", year: "numeric" });
 
     const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const tbody = document.getElementById("calendar-body");
     tbody.innerHTML = "";
@@ -41,7 +41,7 @@
     let row = document.createElement("tr");
 
     // Empty cells before the first day
-    for (let i=0; i<firstDay; i++){
+    for (let i = 0; i < firstDay; i++) {
       row.appendChild(document.createElement("td"));
     }
 
@@ -50,7 +50,7 @@
       const td = document.createElement("td");
       td.innerHTML = `<div class="date">${day}</div>`;
 
-      const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       sessions.filter(s => s.date === dateStr).forEach(s => {
         td.innerHTML += `<div class="event"><strong>${s.subject}</strong><br>${s.time} - ${s.tutor}<br><a target="_blank" href="${formatGoogleLink(s)}">Add to Google</a></div>`;
       });
@@ -78,6 +78,6 @@
   let offset = 0;
   renderCalendar(sessions, offset);
 
-  document.getElementById("prev-month").addEventListener("click", ()=>{offset--; renderCalendar(sessions, offset);});
-  document.getElementById("next-month").addEventListener("click", ()=>{offset++; renderCalendar(sessions, offset);});
+  document.getElementById("prev-month").addEventListener("click", () => { offset--; renderCalendar(sessions, offset); });
+  document.getElementById("next-month").addEventListener("click", () => { offset++; renderCalendar(sessions, offset); });
 })();
