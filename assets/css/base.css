@@ -1,7 +1,12 @@
 :root {
+  /* --primaryColor: #3a74c2; 
+  --secondaryColor: #92bbf8; 
+  --accentColor: #Fdbe8c; */
+  --primaryColor: #132840; 
+  --secondaryColor: #96aaca; 
+  --accentColor: #d46a79;
   --maxw: 1100px;
   --pad: 1rem;
-  --brand: #1f4fd1;
 }
 
 * {
@@ -17,8 +22,8 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height: 1.5;
-  color: #111827;
-  background: #ffffff;
+  color: white;
+  background: var(--primaryColor);
 }
 
 .container {
@@ -33,13 +38,13 @@ img {
 }
 
 .site-header {
-  border-bottom: 1px solid #e5e7eb;
-  background: #fff;
+  border-bottom: 1px solid var(--accentColor);
+  background: var(--primaryColor);
 }
 
 .site-footer {
-  border-top: 1px solid #e5e7eb;
-  background: #fafafa;
+  border-top: 1px solid var(--accentColor);
+  background: var(--primaryColor);
   margin-top: 2rem;
 }
 
@@ -58,22 +63,24 @@ img {
   list-style: none;
   padding-left: 0;
   margin: 0;
+  color: white;
 }
 
 .nav a {
   text-decoration: none;
-  color: #111;
+  color: white;
   padding: .5rem .75rem;
   border-radius: .5rem;
 }
 
 .nav a[aria-current="page"] {
-  background: #eef2ff;
-  color: var(--brand);
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
 }
 
 .nav-toggle {
   display: none;
+  color: white;
 }
 
 @media (max-width: 720px) {
@@ -99,7 +106,7 @@ img {
 .btn {
   display: inline-block;
   padding: .6rem 1rem;
-  background: var(--brand);
+  background: var(--primaryColor);
   color: #fff;
   border-radius: .5rem;
   text-decoration: none;
@@ -107,15 +114,16 @@ img {
 
 .btn.ghost {
   background: transparent;
-  color: var(--brand);
-  border: 1px solid var(--brand);
+  color: var(--primaryColor);
+  border: 1px solid var(--primaryColor);
 }
 
 .card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--accentColor);
   border-radius: .75rem;
   padding: 1rem;
-  background: #fff;
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
 }
 
 .grid {
@@ -210,7 +218,6 @@ progress {
 }
 
 .calendar-table th {
-  background: #f9fafb;
   font-weight: 600;
   text-align: center;
 }
@@ -236,5 +243,5 @@ progress {
 
 .event a {
   font-size: .8rem;
-  color: var(--brand);
+  color: var(--primaryColor);
 }
