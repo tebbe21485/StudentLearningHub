@@ -17,12 +17,14 @@
   <main class="container">
     <h1>Student Dashboard</h1>
     <p>Track your learning progress below.</p>
+    <p><button id="explore-resources" type="button" class="btn">Explore Resources</button></p>
     <progress id="progress-bar" value="0" max="100"></progress>
     <p id="progress-label">0% complete</p>
-    <p>
-      <button id="progress-dec" type="button">-10%</button>
-      <button id="progress-inc" type="button">+10%</button>
-    </p>
+    
+    <section class="card" id="assigned-resources">
+      <h2>Assigned Resources</h2>
+      <div id="assignments-list"></div>
+    </section>
 
   </main>
   <div id="site-footer"></div>

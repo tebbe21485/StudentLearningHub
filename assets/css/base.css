@@ -159,6 +159,84 @@ td {
 progress {
   width: 100%;
   height: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(255,255,255,0.15);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* WebKit */
+progress::-webkit-progress-bar{
+  background: rgba(255,255,255,0.12);
+}
+progress::-webkit-progress-value{
+  background: linear-gradient(90deg, var(--accentColor), var(--secondaryColor));
+  border-radius: 0.75rem;
+}
+
+/* Firefox */
+progress::-moz-progress-bar{
+  background: linear-gradient(90deg, var(--accentColor), var(--secondaryColor));
+  border-radius: 0.75rem;
+}
+
+/* Assignment-specific progress */
+.assignment-progress {
+  height: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+/* Assignment progress with fade into site background */
+progress.assignment-progress::-webkit-progress-value{
+  background: linear-gradient(90deg, var(--accentColor), rgba(19,40,64,0));
+  border-radius: 0.5rem;
+}
+progress.assignment-progress::-moz-progress-bar{
+  background: linear-gradient(90deg, var(--accentColor), rgba(19,40,64,0));
+  border-radius: 0.5rem;
+}
+
+/* Completed / full progress bars show solid accent color (red) */
+progress.completed::-webkit-progress-value,
+progress#progress-bar.completed::-webkit-progress-value{
+  background: var(--accentColor);
+}
+progress.completed::-moz-progress-bar,
+progress#progress-bar.completed::-moz-progress-bar{
+  background: var(--accentColor);
+}
+
+/* Style text file area and notes to follow color scheme */
+#assignment-content pre {
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
+  padding: 1rem;
+  border-radius: .5rem;
+  border: 1px solid var(--accentColor);
+}
+
+#assignment-controls textarea {
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
+  border: 1px solid var(--accentColor);
+  padding: .5rem;
+  border-radius: .5rem;
+}
+
+#assignment-controls button {
+  background: var(--accentColor);
+  color: #fff;
+  border: none;
+  padding: .45rem .6rem;
+  border-radius: .4rem;
+  cursor: pointer;
+}
+
+#assignment-controls button:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 /* Calendar styles */
@@ -189,6 +267,25 @@ progress {
   margin-bottom: .25rem;
 }
 
+/* Downloads card styling to match site color scheme */
+#download-list, #download-list li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#download-list li a {
+  display: inline-block;
+  padding: .5rem .75rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  color: #ffffff;
+  border-radius: .5rem;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+#download-list li a:hover {
+  background: rgba(255,255,255,0.08);
+}
 .event {
   font-size: .85rem;
   margin: .25rem 0;
@@ -243,5 +340,5 @@ progress {
 
 .event a {
   font-size: .8rem;
-  color: var(--primaryColor);
+  color: #ffffff;
 }

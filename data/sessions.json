@@ -1,26 +1,32 @@
 [
   {
-    "date": "2025-09-01",
+    "date": "2026-02-03",
+    "time": "10:00 AM",
+    "subject": "Presentation",
+    "tutor": "Judges"
+  },
+  {
+    "date": "2026-02-04",
     "time": "4:00 PM",
-    "subject": "Math - Algebra Study Group",
+    "subject": "Science - Physics Review",
+    "tutor": "Mr. Smith"
+  },
+  {
+    "date": "2026-03-20",
+    "time": "6:00 AM",
+    "subject": "History - Unit 11 Review",
+    "tutor": "Matt H."
+  },
+  {
+    "date": "2026-02-06",
+    "time": "5:00 PM",
+    "subject": "Math - Unit 5 Prep",
     "tutor": "Sarah L."
   },
   {
-    "date": "2025-09-02",
-    "time": "5:30 PM",
-    "subject": "Science - Physics Review",
-    "tutor": "Jason M."
-  },
-  {
-    "date": "2025-09-03",
-    "time": "7:00 PM",
-    "subject": "History - Unit 2 Prep",
-    "tutor": "Ava R."
-  },
-  {
-    "date": "2025-09-11",
-    "time": "5:00 PM",
-    "subject": "Math - Unit 2 Prep",
+    "date": "2026-02-09",
+    "time": "4:00 PM",
+    "subject": "Math - Algebra Study Group",
     "tutor": "Sarah L."
   }
 ]

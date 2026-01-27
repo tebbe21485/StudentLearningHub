@@ -23,6 +23,33 @@
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.subject)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent("Tutor: " + event.tutor)}`;
   }
 
+  function formatIcs(event) {
+    const start = toDate(event.date, event.time);
+    const end = new Date(start.getTime() + 60 * 60 * 1000); // +1h
+    function fmt(d) {
+      return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    }
+
+    const uid = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    const lines = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Student Learning Hub//EN",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${fmt(new Date())}`,
+      `DTSTART:${fmt(start)}`,
+      `DTEND:${fmt(end)}`,
+      `SUMMARY:${event.subject}`,
+      `DESCRIPTION:Tutor: ${event.tutor}`,
+      `LOCATION:Online`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ];
+
+    return lines.join("\r\n");
+  }
+
   function renderCalendar(sessions, monthOffset = 0) {
     const today = new Date();
     const viewDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
@@ -52,7 +79,10 @@
 
       const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       sessions.filter(s => s.date === dateStr).forEach(s => {
-        td.innerHTML += `<div class="event"><strong>${s.subject}</strong><br>${s.time} - ${s.tutor}<br><a target="_blank" href="${formatGoogleLink(s)}">Add to Google</a></div>`;
+        const ics = formatIcs(s);
+        const icsHref = `data:text/calendar;charset=utf8,${encodeURIComponent(ics)}`;
+        const fileName = `${s.subject.replace(/[^a-z0-9\- ]/gi, "").replace(/ /g, "_") || 'event'}.ics`;
+        td.innerHTML += `<div class="event"><strong>${s.subject}</strong><br>${s.time} - ${s.tutor}<br><a target="_blank" href="${formatGoogleLink(s)}">Add to Google</a> | <a href="${icsHref}" download="${fileName}">Download .ics</a></div>`;
       });
 
       row.appendChild(td);
