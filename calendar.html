@@ -21,6 +21,7 @@
       <button id="prev-month">Prev</button>
       <h2 id="calendar-month"></h2>
       <button id="next-month">Next</button>
+      <button id="add-appointment">Add Appointment</button>
     </div>
 
     <table class="calendar-table">
@@ -38,6 +39,78 @@
       <tbody id="calendar-body"></tbody>
     </table>
   </main>
+
+  <!-- Add Appointment Modal -->
+  <div id="appointment-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Appointment</h2>
+        <button id="modal-close" class="modal-close">&times;</button>
+      </div>
+      <form id="appointment-form">
+        <div class="form-row">
+          <div>
+            <label for="apt-date">Date</label>
+            <input type="date" id="apt-date" required />
+          </div>
+          <div>
+            <label for="apt-time">Time</label>
+            <input type="time" id="apt-time" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="apt-subject">Subject</label>
+            <input type="text" id="apt-subject" placeholder="e.g. Math - Unit 5 Prep" required />
+          </div>
+          <div>
+            <label for="apt-tutor">Tutor</label>
+            <input type="text" id="apt-tutor" placeholder="e.g. Sarah L." required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="apt-location">Location</label>
+            <input type="text" id="apt-location" placeholder="e.g. Math Center - Room 101" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Add Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Event Details Modal -->
+  <div id="event-details-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="details-subject"></h2>
+        <button id="details-close" class="modal-close">&times;</button>
+      </div>
+      <div class="event-details">
+        <div class="detail-row">
+          <strong>Time:</strong>
+          <span id="details-time"></span>
+        </div>
+        <div class="detail-row">
+          <strong>Tutor:</strong>
+          <span id="details-tutor"></span>
+        </div>
+        <div class="detail-row">
+          <strong>Location:</strong>
+          <span id="details-location"></span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <a id="details-google" target="_blank" class="btn-primary">Add to Google Calendar</a>
+        <a id="details-ics" download class="btn-primary">Download .ics</a>
+        <button id="details-remove" class="btn-remove">Remove</button>
+        <button id="details-done" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
 
   <div id="site-footer"></div>
 </body>

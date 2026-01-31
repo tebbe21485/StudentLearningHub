@@ -3,30 +3,35 @@
     "date": "2026-02-03",
     "time": "12:00 PM",
     "subject": "Presentation",
-    "tutor": "Judges"
+    "tutor": "Judges",
+    "location": "Judging Room"
   },
   {
     "date": "2026-02-04",
     "time": "4:00 PM",
     "subject": "Science - Physics Review",
-    "tutor": "Mr. Smith"
+    "tutor": "Mr. Smith",
+    "location": "Science Lab - Room 204"
   },
   {
     "date": "2026-03-20",
     "time": "6:00 AM",
     "subject": "History - Unit 11 Review",
-    "tutor": "Matt H."
+    "tutor": "Matt H.",
+    "location": "Online"
   },
   {
     "date": "2026-02-06",
     "time": "5:00 PM",
     "subject": "Math - Unit 5 Prep",
-    "tutor": "Sarah L."
+    "tutor": "Sarah L.",
+    "location": "Math Center - Room 101"
   },
   {
     "date": "2026-02-09",
     "time": "4:00 PM",
     "subject": "Math - Algebra Study Group",
-    "tutor": "Sarah L."
+    "tutor": "Sarah L.",
+    "location": "Library - Study Room 3"
   }
 ]
