@@ -2,6 +2,8 @@
 (function(){
   const PROG_KEY = 'slh-progress';
   const ASSIGN_KEY = 'slh-assignments';
+  let lastMainProgress = null;
+  const lastAssignmentProgress = {};
 
   function loadAssignments(){
     try { return JSON.parse(localStorage.getItem(ASSIGN_KEY) || '[]'); }
@@ -22,13 +24,36 @@
     return Math.round(sum / a.length);
   }
 
+  function animateValue(from, to, onUpdate, onDone){
+    if (Math.abs(to - from) < 0.5) {
+      onUpdate(to);
+      if (onDone) onDone();
+      return;
+    }
+    const start = performance.now();
+    const duration = 320;
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = from + (to - from) * eased;
+      onUpdate(value);
+      if (t < 1) requestAnimationFrame(step);
+      else if (onDone) onDone();
+    };
+    requestAnimationFrame(step);
+  }
+
   function renderMainProgress(){
     const bar = document.getElementById('progress-bar');
     const label = document.getElementById('progress-label');
     if (!bar || !label) return;
     const v = computeAggregate();
-    bar.value = v;
-    label.textContent = v + '% complete';
+    const from = (lastMainProgress == null) ? v : lastMainProgress;
+    animateValue(from, v, (current) => {
+      bar.value = current;
+      label.textContent = Math.round(current) + '% complete';
+    });
+    lastMainProgress = v;
     // add completed class when full so CSS can style it
     if (v === 100) bar.classList.add('completed'); else bar.classList.remove('completed');
   }
@@ -48,11 +73,13 @@
       const title = document.createElement('h3');
       title.textContent = a.title;
       const prog = document.createElement('progress');
-      prog.max = 100; prog.value = Number(a.progress) || 0;
+      const target = Number(a.progress) || 0;
+      const from = (lastAssignmentProgress[a.id] == null) ? target : lastAssignmentProgress[a.id];
+      prog.max = 100; prog.value = from;
       prog.className = 'assignment-progress';
       if (Number(a.progress) === 100) prog.classList.add('completed');
       const label = document.createElement('div');
-      label.textContent = (Number(a.progress) || 0) + '%';
+      label.textContent = Math.round(from) + '%';
       const controls = document.createElement('div');
       controls.className = 'event actions';
       const openBtn = document.createElement('button'); openBtn.type='button'; openBtn.textContent='Open';
@@ -68,6 +95,11 @@
       wrap.appendChild(label);
       wrap.appendChild(controls);
       list.appendChild(wrap);
+      animateValue(from, target, (current) => {
+        prog.value = current;
+        label.textContent = Math.round(current) + '%';
+      });
+      lastAssignmentProgress[a.id] = target;
     });
   }
 

@@ -50,8 +50,9 @@
     document.querySelectorAll('.card').forEach(card => {
       const h2 = card.querySelector('h2');
       if (!h2) return;
-      // don't add an assign button for the Downloads card
-      if (h2.textContent.trim().toLowerCase().includes('download')) return;
+      const cardTitle = h2.textContent.trim().toLowerCase();
+      // don't add an assign button for cards that have lists (Readings, Videos, Quizzes)
+      if (cardTitle.includes('reading') || cardTitle.includes('video') || cardTitle.includes('quiz')) return;
       const title = h2.textContent.trim();
       // don't duplicate button
       if (card.querySelector('.assign-btn')) return;
@@ -87,9 +88,50 @@
     });
   }
 
+  function initQuizzes(){
+    const list = document.getElementById('quiz-list');
+    if (!list) return;
+    list.querySelectorAll('li').forEach(li => {
+      if (li.querySelector('.assign-btn')) return;
+      const a = li.querySelector('a');
+      const title = a ? a.textContent.trim() : li.textContent.trim();
+      // For quizzes, always use 'data/quizzes.json' as the href, matching how assignment.js references it
+      let storedHref = 'data/quizzes.json';
+      const btn = makeAssignButton(title, storedHref);
+      li.appendChild(document.createTextNode(' '));
+      li.appendChild(btn);
+    });
+  }
+
+  function initVideos(){
+    const list = document.getElementById('video-list');
+    if (!list) return;
+    list.querySelectorAll('li').forEach(li => {
+      if (li.querySelector('.assign-btn')) return;
+      const a = li.querySelector('a');
+      const title = a ? a.textContent.trim() : li.textContent.trim();
+      let storedHref = null;
+      if (a) {
+        const raw = a.getAttribute('href') || '';
+        try {
+          const parsed = new URL(raw, window.location.origin);
+          const inner = parsed.searchParams.get('href');
+          storedHref = inner || raw;
+        } catch (e) {
+          storedHref = raw;
+        }
+      }
+      const btn = makeAssignButton(title, storedHref);
+      li.appendChild(document.createTextNode(' '));
+      li.appendChild(btn);
+    });
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     initCards();
     initDownloads();
+    initQuizzes();
+    initVideos();
     // disable assigned buttons for already assigned and keep in sync when assignments change
     function updateAssignedButtons(){
       const assignments = load();

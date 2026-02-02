@@ -11,6 +11,72 @@
     catch(e){ return []; }
   }
   function saveAssignments(a){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(a)); window.dispatchEvent(new Event('assignments-changed')); }
+  function upsertAssignedItem(baseItem){
+    const aList = loadAssignments();
+    const idx = aList.findIndex(x => (x.href || '') === (baseItem.href || '') && x.title === baseItem.title);
+    if (idx !== -1) {
+      aList[idx].assigned = true;
+      aList[idx].assignedAt = new Date().toISOString();
+      if (baseItem.fontSize != null) aList[idx].fontSize = baseItem.fontSize;
+      saveAssignments(aList);
+      return aList[idx].id;
+    }
+
+    const newId = Date.now() + '-' + Math.random().toString(36).slice(2,8);
+    const item = Object.assign({
+      id: newId,
+      progress: 0,
+      assigned: true,
+      assignedAt: new Date().toISOString()
+    }, baseItem);
+    aList.push(item);
+    saveAssignments(aList);
+    return newId;
+  }
+
+  function setupPreviewAssignButton(isPreview, assignment, href, extra){
+    const assignBtn = document.getElementById('assign-to-dashboard');
+    if (!assignBtn) return;
+
+    if (!isPreview) {
+      assignBtn.style.display = 'none';
+      return;
+    }
+
+    assignBtn.style.display = 'inline-block';
+    assignBtn.onclick = () => {
+      const dynamicExtra = (typeof extra === 'function') ? (extra() || {}) : (extra || {});
+      const newId = upsertAssignedItem(Object.assign({
+        title: assignment.title,
+        href: href
+      }, dynamicExtra));
+      if (newId) window.location.href = `assignment.html?id=${encodeURIComponent(newId)}`;
+    };
+  }
+  function renderMarkDoneControl(assignment, metaEl, controlsEl){
+    if (!controlsEl || !assignment || !assignment.id) return null;
+    const done = document.createElement('button');
+    done.type = 'button';
+    done.textContent = (assignment.progress === 100) ? 'Mark as Incomplete' : 'Mark as Done';
+    done.addEventListener('click', () => {
+      const a = loadAssignments();
+      const idx = a.findIndex(x => x.id === assignment.id);
+      if (idx === -1) return;
+      if (a[idx].progress === 100) {
+        a[idx].progress = 0;
+        saveAssignments(a);
+        done.textContent = 'Mark as Done';
+        metaEl.innerHTML = '<p>Progress: 0%</p>';
+      } else {
+        a[idx].progress = 100;
+        saveAssignments(a);
+        done.textContent = 'Mark as Incomplete';
+        metaEl.innerHTML = '<p>Progress: 100%</p>';
+      }
+    });
+    controlsEl.appendChild(done);
+    return done;
+  }
 
   function renderText(url, container){
     (async ()=>{
@@ -49,7 +115,8 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  async function renderQuiz(assignment, container, metaEl){
+  async function renderQuiz(assignment, container, metaEl, options){
+    const isPreview = !!(options && options.isPreview);
     metaEl.innerHTML = '';
     const heading = document.createElement('p'); heading.textContent = `Progress: ${assignment.progress || 0}%`;
     metaEl.appendChild(heading);
@@ -68,6 +135,7 @@
         label.style.display = 'block';
         const input = document.createElement('input');
         input.type = 'radio'; input.name = `q${i}`; input.value = String(idx);
+        if (isPreview) input.disabled = true;
         label.appendChild(input);
         label.appendChild(document.createTextNode(' ' + c));
         choicesWrap.appendChild(label);
@@ -80,13 +148,15 @@
     });
 
     // restore previous answers if present
-    if (Array.isArray(assignment.answers)) {
+    if (!isPreview && Array.isArray(assignment.answers)) {
       assignment.answers.forEach((val, i) => {
         if (val == null) return;
         const el = document.querySelector(`input[name="q${i}"][value="${val}"]`);
         if (el) el.checked = true;
       });
     }
+
+    if (isPreview) return;
 
     const submit = document.createElement('button'); submit.type = 'button'; submit.textContent = 'Submit';
     const scoreEl = document.createElement('div'); scoreEl.id = 'quiz-score';
@@ -156,31 +226,109 @@
         const controls = document.getElementById('assignment-controls');
         if (controls) {
           controls.innerHTML = '';
-          const done = document.createElement('button');
-            done.type = 'button';
-            // show toggle text depending on state
-            if (assignment.progress === 100) done.textContent = 'Mark as Incomplete';
-            else done.textContent = 'Mark as Done';
-            done.addEventListener('click', () => {
+          renderMarkDoneControl(assignment, meta, controls);
+        }
+      } else if (/\.(mp4|webm|ogg|mov|m4v)$/i.test(href)) {
+        const video = document.createElement('video');
+        video.src = href;
+        video.controls = true;
+        video.style.width = '100%';
+        video.style.maxHeight = '80vh';
+        video.style.borderRadius = '.5rem';
+        content.appendChild(video);
+
+        const controls = document.getElementById('assignment-controls');
+        if (controls) {
+          controls.innerHTML = '';
+          if (isPreview) {
+            const info = document.createElement('div');
+            info.textContent = 'Preview mode - assign to save progress.';
+            controls.appendChild(info);
+          } else {
+            const notes = document.createElement('textarea');
+            notes.rows = 6;
+            notes.style.width = '100%';
+            notes.placeholder = 'Your notes...';
+            notes.value = assignment.notes || '';
+
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.textContent = 'Save Notes';
+            saveBtn.style.marginRight = '0.5rem';
+            saveBtn.addEventListener('click', () => {
+              const a = loadAssignments();
+              const idx = a.findIndex(x => x.id === assignment.id);
+              if (idx !== -1) {
+                a[idx].notes = notes.value;
+                saveAssignments(a);
+                saveBtn.textContent = 'Saved';
+                setTimeout(() => { saveBtn.textContent = 'Save Notes'; }, 1200);
+              }
+            });
+
+            controls.appendChild(notes);
+            controls.appendChild(document.createElement('div'));
+            controls.appendChild(saveBtn);
+
+            const doneBtn = renderMarkDoneControl(assignment, meta, controls);
+            const saveVideoState = (forceComplete) => {
               const a = loadAssignments();
               const idx = a.findIndex(x => x.id === assignment.id);
               if (idx === -1) return;
-              if (a[idx].progress === 100) {
-                // un-complete
-                a[idx].progress = 0;
-                saveAssignments(a);
-                done.textContent = 'Mark as Done';
-                meta.innerHTML = `<p>Progress: 0%</p>`;
-              } else {
-                // complete
+
+              const current = Number(video.currentTime) || 0;
+              const duration = Number(video.duration) || 0;
+              a[idx].videoTime = Math.floor(forceComplete ? (duration || current) : current);
+
+              if (forceComplete) {
                 a[idx].progress = 100;
-                saveAssignments(a);
-                done.textContent = 'Mark as Incomplete';
-                meta.innerHTML = `<p>Progress: 100%</p>`;
+              } else if (duration > 0 && a[idx].progress !== 100) {
+                // keep in-progress playback below 100% until the video actually ends
+                const watched = Math.min(99, Math.round((current / duration) * 100));
+                if (watched > (Number(a[idx].progress) || 0)) a[idx].progress = watched;
+              }
+
+              saveAssignments(a);
+              meta.innerHTML = `<p>Progress: ${a[idx].progress || 0}%</p>`;
+            };
+
+            video.addEventListener('loadedmetadata', () => {
+              const startAt = Number(assignment.videoTime) || 0;
+              if (startAt > 0 && startAt < Math.max(0, (Number(video.duration) || 0) - 1)) {
+                video.currentTime = startAt;
               }
             });
-            controls.appendChild(done);
+
+            let lastSave = 0;
+            video.addEventListener('timeupdate', () => {
+              const now = Date.now();
+              if (now - lastSave < 3000) return;
+              lastSave = now;
+              saveVideoState(false);
+            });
+            video.addEventListener('pause', () => { saveVideoState(false); });
+            window.addEventListener('beforeunload', () => { saveVideoState(false); });
+
+            video.addEventListener('ended', () => {
+              saveVideoState(true);
+              if (doneBtn) doneBtn.textContent = 'Mark as Incomplete';
+            });
+          }
         }
+        setupPreviewAssignButton(isPreview, assignment, href, { notes: '', videoTime: 0 });
+      } else if (href.endsWith('.json') || href.includes('quizzes')) {
+        // Handle quiz JSON files
+        renderQuiz(assignment, content, meta, { isPreview: isPreview });
+        if (isPreview) {
+          const controls = document.getElementById('assignment-controls');
+          if (controls) {
+            controls.innerHTML = '';
+            const info = document.createElement('div');
+            info.textContent = 'Preview mode - assign to save progress.';
+            controls.appendChild(info);
+          }
+        }
+        setupPreviewAssignButton(isPreview, assignment, href, { answers: [] });
       } else if (href.endsWith('.txt') || href.endsWith('.md')) {
         renderText(href, content);
         // Move font-size controls to the top toolbar and prepare bottom controls area
@@ -192,7 +340,23 @@
         const fsDecTop = document.createElement('button'); fsDecTop.type = 'button'; fsDecTop.textContent = 'Text size -';
         const fsIncTop = document.createElement('button'); fsIncTop.type = 'button'; fsIncTop.textContent = 'Text size +';
         fsDecTop.style.marginRight = '0.5rem';
-        if (toolbar) { toolbar.appendChild(fsDecTop); toolbar.appendChild(fsIncTop); }
+        
+        // Add download button
+        const downloadBtn = document.createElement('button'); 
+        downloadBtn.type = 'button'; 
+        downloadBtn.textContent = 'Download Resource';
+        downloadBtn.style.marginLeft = '0.5rem';
+        downloadBtn.addEventListener('click', () => {
+          const title = qsParam('title') || 'download';
+          const a = document.createElement('a');
+          a.href = href;
+          a.download = title;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+        
+        if (toolbar) { toolbar.appendChild(fsDecTop); toolbar.appendChild(fsIncTop); toolbar.appendChild(downloadBtn); }
 
         // Notes and Done only for real assignments
         if (!isPreview && assignment.id) {
@@ -274,30 +438,13 @@
         // show/hide assign button at bottom
         const assignBtn = document.getElementById('assign-to-dashboard');
         if (assignBtn) {
-          if (!isPreview) assignBtn.style.display = 'none';
-          else assignBtn.style.display = 'inline-block';
-          assignBtn.addEventListener('click', () => {
-            // create or enable assignment and redirect to id view
-            const aList = loadAssignments();
-            const idx = aList.findIndex(x => (x.href||'') === href && x.title === assignment.title);
-            let newId = null;
-            // detect current font size
-            const pre = content.querySelector('pre');
-            const curSize = pre ? parseInt(window.getComputedStyle(pre).fontSize, 10) : null;
-            if (idx !== -1) {
-              aList[idx].assigned = true;
-              aList[idx].assignedAt = new Date().toISOString();
-              if (curSize) aList[idx].fontSize = curSize;
-              saveAssignments(aList);
-              newId = aList[idx].id;
-            } else {
-              newId = Date.now() + '-' + Math.random().toString(36).slice(2,8);
-              const item = { id: newId, title: assignment.title, href: href, progress: 0, assigned: true, assignedAt: new Date().toISOString(), notes: '', fontSize: curSize };
-              aList.push(item);
-              saveAssignments(aList);
-            }
-            if (newId) window.location.href = `assignment.html?id=${encodeURIComponent(newId)}`;
-          });
+          setupPreviewAssignButton(isPreview, assignment, href, () => ({
+            notes: '',
+            fontSize: (() => {
+              const pre = content.querySelector('pre');
+              return pre ? parseInt(window.getComputedStyle(pre).fontSize, 10) : null;
+            })()
+          }));
         }
       } else if (href.endsWith('.html')) {
         // redirect to resource page
@@ -309,36 +456,18 @@
     } else {
       // treat as quiz if title contains 'Quiz' or no href
       if (/quiz/i.test(assignment.title)) {
-        renderQuiz(assignment, content, meta);
-          // handle assign-to-dashboard for quizzes (no href)
-          const assignBtnQ = document.getElementById('assign-to-dashboard');
-          if (assignBtnQ) {
-            // hide assign button when viewing a saved assignment
-            if (!isPreview && assignment.id) {
-              assignBtnQ.style.display = 'none';
-            } else {
-              assignBtnQ.style.display = isPreview ? 'inline-block' : 'none';
-            }
-            // disable if already assigned
-            if (assignment.assigned) { assignBtnQ.textContent = 'Assigned'; assignBtnQ.disabled = true; assignBtnQ.style.display = 'none'; }
-            assignBtnQ.addEventListener('click', () => {
-              const aList = loadAssignments();
-              const idx = aList.findIndex(x => (x.href||'') === (assignment.href||'') && x.title === assignment.title);
-              let newId = null;
-              if (idx !== -1) {
-                aList[idx].assigned = true;
-                aList[idx].assignedAt = new Date().toISOString();
-                saveAssignments(aList);
-                newId = aList[idx].id;
-              } else {
-                newId = Date.now() + '-' + Math.random().toString(36).slice(2,8);
-                const item = { id: newId, title: assignment.title, href: assignment.href || null, progress: 0, assigned: true, assignedAt: new Date().toISOString(), notes: '', fontSize: null };
-                aList.push(item);
-                saveAssignments(aList);
-              }
-              if (newId) window.location.href = `assignment.html?id=${encodeURIComponent(newId)}`;
-            });
+        const quizHref = 'data/quizzes.json';
+        renderQuiz(assignment, content, meta, { isPreview: isPreview });
+        if (isPreview) {
+          const controls = document.getElementById('assignment-controls');
+          if (controls) {
+            controls.innerHTML = '';
+            const info = document.createElement('div');
+            info.textContent = 'Preview mode - assign to save progress.';
+            controls.appendChild(info);
           }
+        }
+        setupPreviewAssignButton(isPreview, assignment, quizHref, { answers: [] });
       } else {
         content.textContent = 'No preview available for this assignment.';
       }

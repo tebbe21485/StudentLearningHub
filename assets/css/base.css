@@ -188,13 +188,13 @@ progress::-moz-progress-bar{
   border-radius: 0.5rem;
 }
 
-/* Assignment progress with fade into site background */
+/* Assignment progress should visually match the true percentage */
 progress.assignment-progress::-webkit-progress-value{
-  background: linear-gradient(90deg, var(--accentColor), rgba(19,40,64,0));
+  background: var(--accentColor);
   border-radius: 0.5rem;
 }
 progress.assignment-progress::-moz-progress-bar{
-  background: linear-gradient(90deg, var(--accentColor), rgba(19,40,64,0));
+  background: var(--accentColor);
   border-radius: 0.5rem;
 }
 
@@ -267,13 +267,17 @@ progress#progress-bar.completed::-moz-progress-bar{
   margin-bottom: .25rem;
 }
 
-/* Downloads card styling to match site color scheme */
-#download-list, #download-list li {
+/* Resource list styling (readings/quizzes/videos) to match site color scheme */
+#download-list, #download-list li,
+#quiz-list, #quiz-list li,
+#video-list, #video-list li {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-#download-list li a {
+#download-list li a,
+#quiz-list li a,
+#video-list li a {
   display: inline-block;
   padding: .5rem .75rem;
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
@@ -283,7 +287,9 @@ progress#progress-bar.completed::-moz-progress-bar{
   border: 1px solid rgba(255,255,255,0.04);
 }
 
-#download-list li a:hover {
+#download-list li a:hover,
+#quiz-list li a:hover,
+#video-list li a:hover {
   background: rgba(255,255,255,0.08);
 }
 .event {
