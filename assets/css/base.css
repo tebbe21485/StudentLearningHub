@@ -302,6 +302,13 @@ progress#progress-bar.completed::-moz-progress-bar{
   margin-right: .25rem;
 }
 
+/* Dashboard action buttons (Open/Remove) spacing */
+.event.actions {
+  display: flex;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
 /* Calendar table: equal column widths, equal row heights */
 .calendar-table {
   width: 100%;
