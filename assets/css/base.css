@@ -1,7 +1,4 @@
 :root {
-  /* --primaryColor: #3a74c2; 
-  --secondaryColor: #92bbf8; 
-  --accentColor: #Fdbe8c; */
   --primaryColor: #132840; 
   --secondaryColor: #96aaca; 
   --accentColor: #d46a79;
@@ -119,9 +116,10 @@ img {
 }
 
 .card {
-  border: 1px solid var(--accentColor);
-  border-radius: .75rem;
+  border: 2px solid var(--accentColor);
+  border-radius: 2rem;
   padding: 1rem;
+  margin: 1rem 0;
   background: var(--secondaryColor);
   color: var(--primaryColor);
 }

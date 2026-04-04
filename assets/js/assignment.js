@@ -125,6 +125,211 @@
     const res = await fetch('data/quizzes.json');
     const data = await res.json();
 
+    // Add calculator toggle button with icon
+    const calcToggle = document.createElement('button');
+    calcToggle.type = 'button';
+    // Realistic calculator SVG icon
+    calcToggle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" style="width: 100%; height: 100%;">
+      <rect x="8" y="10" width="84" height="120" rx="4" fill="#2c3e50" stroke="#1a252f" stroke-width="2"/>
+      <rect x="12" y="20" width="76" height="30" fill="#34495e" rx="2"/>
+      <rect x="15" y="25" width="70" height="20" fill="#ecf0f1" rx="1"/>
+      <circle cx="20" cy="60" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="35" cy="60" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="50" cy="60" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="65" cy="60" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="80" cy="60" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="20" cy="75" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="35" cy="75" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="50" cy="75" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="65" cy="75" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <rect x="77" y="68" width="12" height="14" fill="#27ae60" stroke="#229954" stroke-width="1" rx="1"/>
+      <circle cx="20" cy="90" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="35" cy="90" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="50" cy="90" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="65" cy="90" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <rect x="77" y="83" width="12" height="14" fill="#27ae60" stroke="#229954" stroke-width="1" rx="1"/>
+      <circle cx="20" cy="105" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="35" cy="105" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="50" cy="105" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <circle cx="65" cy="105" r="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
+      <rect x="77" y="98" width="12" height="14" fill="#27ae60" stroke="#229954" stroke-width="1" rx="1"/>
+    </svg>`;
+    calcToggle.title = 'Show Graphing Calculator';
+    calcToggle.style.marginBottom = '1rem';
+    calcToggle.style.fontSize = '1.5rem';
+    calcToggle.style.padding = '0.5rem';
+    calcToggle.style.width = '3rem';
+    calcToggle.style.height = '3rem';
+    calcToggle.style.borderRadius = '50%';
+    calcToggle.style.display = 'flex';
+    calcToggle.style.alignItems = 'center';
+    calcToggle.style.justifyContent = 'center';
+    calcToggle.className = 'btn calculator-toggle';
+
+    // Create floating calculator container
+    const calcFloatingContainer = document.createElement('div');
+    calcFloatingContainer.className = 'calculator-floating-container';
+    calcFloatingContainer.style.display = 'none';
+    calcFloatingContainer.style.position = 'fixed';
+    calcFloatingContainer.style.top = '0';
+    calcFloatingContainer.style.left = '0';
+    calcFloatingContainer.style.width = '100%';
+    calcFloatingContainer.style.height = '100%';
+    calcFloatingContainer.style.backgroundColor = 'transparent';
+    calcFloatingContainer.style.zIndex = '999';
+    calcFloatingContainer.style.pointerEvents = 'none';
+
+    // Create calculator window
+    const calcWindow = document.createElement('div');
+    calcWindow.className = 'calculator-window';
+    calcWindow.style.position = 'fixed';
+    calcWindow.style.top = '50px';
+    calcWindow.style.right = '20px';
+    calcWindow.style.width = '450px';
+    calcWindow.style.height = '550px';
+    calcWindow.style.minWidth = '300px';
+    calcWindow.style.minHeight = '250px';
+    calcWindow.style.backgroundColor = 'white';
+    calcWindow.style.borderRadius = '8px';
+    calcWindow.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+    calcWindow.style.overflow = 'hidden';
+    calcWindow.style.cursor = 'move';
+    calcWindow.style.pointerEvents = 'auto';
+
+    // Create window header
+    const calcHeader = document.createElement('div');
+    calcHeader.className = 'calculator-header';
+    calcHeader.style.padding = '10px 15px';
+    calcHeader.style.backgroundColor = 'var(--primaryColor, #132840)';
+    calcHeader.style.color = 'white';
+    calcHeader.style.display = 'flex';
+    calcHeader.style.justifyContent = 'space-between';
+    calcHeader.style.alignItems = 'center';
+    calcHeader.style.cursor = 'move';
+
+    const calcTitle = document.createElement('span');
+    calcTitle.textContent = 'Graphing Calculator';
+    calcTitle.style.fontWeight = 'bold';
+
+    const calcClose = document.createElement('button');
+    calcClose.innerHTML = 'x';
+    calcClose.style.background = 'none';
+    calcClose.style.border = 'none';
+    calcClose.style.color = 'white';
+    calcClose.style.fontSize = '1.5rem';
+    calcClose.style.cursor = 'pointer';
+    calcClose.style.padding = '0';
+    calcClose.style.width = '30px';
+    calcClose.style.height = '30px';
+    calcClose.style.display = 'flex';
+    calcClose.style.alignItems = 'center';
+    calcClose.style.justifyContent = 'center';
+    calcClose.title = 'Hide Calculator';
+    calcClose.addEventListener('click', () => {
+      calcFloatingContainer.style.display = 'none';
+      calcToggle.style.display = 'flex';
+    });
+
+    calcHeader.appendChild(calcTitle);
+    calcHeader.appendChild(calcClose);
+
+    // Create calculator container
+    const calcContainer = document.createElement('div');
+    calcContainer.style.width = '100%';
+    calcContainer.style.height = 'calc(100% - 50px)';
+    calcContainer.style.overflow = 'hidden';
+
+    calcWindow.appendChild(calcHeader);
+    calcWindow.appendChild(calcContainer);
+    calcFloatingContainer.appendChild(calcWindow);
+    document.body.appendChild(calcFloatingContainer);
+
+    let calculator = null;
+    let isDragging = false;
+    let dragOffset = { x: 0, y: 0 };
+
+    // Make window draggable
+    calcHeader.addEventListener('mousedown', (e) => {
+      if (e.target === calcClose) return; // Don't drag when clicking close button
+      isDragging = true;
+      const rect = calcWindow.getBoundingClientRect();
+      dragOffset.x = e.clientX - rect.left;
+      dragOffset.y = e.clientY - rect.top;
+      calcWindow.style.cursor = 'grabbing';
+      calcHeader.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const newLeft = e.clientX - dragOffset.x;
+        const newTop = e.clientY - dragOffset.y;
+
+        // Keep window within viewport bounds
+        const maxLeft = window.innerWidth - calcWindow.offsetWidth;
+        const maxTop = window.innerHeight - calcWindow.offsetHeight;
+
+        calcWindow.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + 'px';
+        calcWindow.style.top = Math.max(0, Math.min(newTop, maxTop)) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      calcWindow.style.cursor = 'move';
+      calcHeader.style.cursor = 'move';
+    });
+
+    // Make window resizable
+    const resizeHandle = document.createElement('div');
+    resizeHandle.style.position = 'absolute';
+    resizeHandle.style.bottom = '0';
+    resizeHandle.style.right = '0';
+    resizeHandle.style.width = '20px';
+    resizeHandle.style.height = '20px';
+    resizeHandle.style.cursor = 'nw-resize';
+    resizeHandle.style.background = 'linear-gradient(-45deg, transparent 0%, transparent 40%, var(--secondaryColor) 40%, var(--secondaryColor) 60%, transparent 60%, transparent 100%)';
+
+    calcWindow.appendChild(resizeHandle);
+
+    let isResizing = false;
+    resizeHandle.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isResizing = true;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isResizing) {
+        const rect = calcWindow.getBoundingClientRect();
+        const newWidth = e.clientX - rect.left;
+        const newHeight = e.clientY - rect.top;
+
+        calcWindow.style.width = Math.max(400, newWidth) + 'px';
+        calcWindow.style.height = Math.max(300, newHeight) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isResizing = false;
+    });
+
+    calcToggle.addEventListener('click', () => {
+      calcFloatingContainer.style.display = 'block';
+      calcToggle.style.display = 'none';
+      if (!calculator) {
+        // Embed Desmos calculator iframe
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.desmos.com/calculator';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.title = 'Desmos Graphing Calculator';
+        calcContainer.appendChild(iframe);
+        calculator = iframe; // Mark as loaded
+      }
+    });
+
+    container.appendChild(calcToggle);
+
     // render questions
     data.questions.forEach((q, i) => {
       const div = document.createElement('div'); div.className = 'card';

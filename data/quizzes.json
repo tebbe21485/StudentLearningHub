@@ -17,6 +17,36 @@
         "4"
       ],
       "answerIndex": 2
+    },
+    {
+      "prompt": "What is the solution to x² - 4 = 0?",
+      "choices": [
+        "x = 2 only",
+        "x = -2 only",
+        "x = 2 or x = -2",
+        "No solution"
+      ],
+      "answerIndex": 2
+    },
+    {
+      "prompt": "Graph the function f(x) = x² + 2x - 3. What is the y-intercept?",
+      "choices": [
+        "(0, -3)",
+        "(0, 3)",
+        "(0, 0)",
+        "(0, 2)"
+      ],
+      "answerIndex": 0
+    },
+    {
+      "prompt": "Solve the system: y = 2x + 1 and y = x + 3",
+      "choices": [
+        "(2, 5)",
+        "(1, 3)",
+        "(3, 7)",
+        "(0, 1)"
+      ],
+      "answerIndex": 0
     }
   ]
 }

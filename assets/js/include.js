@@ -30,6 +30,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     'calendar.html': 'calendar',
     'dashboard.html': 'dashboard',
     'resources.html': 'resources',
+    'assignment.html': 'dashboard',
     'about.html': 'about'
   };
   const path = location.pathname.split('/').pop() || 'index.html';
