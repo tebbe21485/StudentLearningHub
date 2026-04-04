@@ -326,3 +326,80 @@ button:hover {
         min-height: 250px !important;
     }
 }
+
+/* Quiz Styles */
+.result {
+    color: var(--primaryColor);
+    font-weight: 600;
+    margin-top: 0.75rem;
+}
+
+.quiz-choice {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: .5rem 0rem;
+    color: var(--primaryColor);
+    text-align: left;
+    
+}
+
+.quiz-choice:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.checkbox-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.checkbox-container input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--primaryColor);
+    border-radius: 2px;
+    cursor: pointer;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+.checkbox-container input[type="radio"]:checked {
+    background: var(--primaryColor);
+}
+
+.checkbox-container input[type="radio"]:focus {
+    outline: 2px solid var(--accentColor);
+    outline-offset: 2px;
+}
+
+.checkbox-container .choice-letter {
+    position: absolute;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primaryColor);
+    pointer-events: none;
+}
+
+.checkbox-container input[type="radio"]:checked + .choice-letter {
+    color: var(--secondaryColor);
+}
+
+.quiz-choice .choice-text {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--primaryColor);
+}
+
+.checkbox-container input[type="radio"]:checked + .choice-letter {
+    color: var(--secondaryColor);
+}

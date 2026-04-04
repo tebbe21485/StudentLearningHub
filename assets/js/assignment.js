@@ -103,7 +103,10 @@
         if (ct.includes('text/html') || String(text).trim().toLowerCase().startsWith('<!doctype') || String(text).trim().toLowerCase().startsWith('<html')) {
           continue;
         }
-        const pre = document.createElement('pre'); pre.textContent = text; pre.style.whiteSpace = 'pre-wrap';
+        const pre = document.createElement('pre'); 
+        pre.textContent = text; 
+        pre.style.whiteSpace = 'pre-wrap';
+        pre.style.border = '2px solid var(--accentColor)';
         container.appendChild(pre);
         return;
       }
@@ -155,7 +158,6 @@
       <rect x="77" y="98" width="12" height="14" fill="#27ae60" stroke="#229954" stroke-width="1" rx="1"/>
     </svg>`;
     calcToggle.title = 'Show Graphing Calculator';
-    calcToggle.style.marginBottom = '1rem';
     calcToggle.style.fontSize = '1.5rem';
     calcToggle.style.padding = '0.5rem';
     calcToggle.style.width = '3rem';
@@ -227,7 +229,6 @@
     calcClose.title = 'Hide Calculator';
     calcClose.addEventListener('click', () => {
       calcFloatingContainer.style.display = 'none';
-      calcToggle.style.display = 'flex';
     });
 
     calcHeader.appendChild(calcTitle);
@@ -314,7 +315,6 @@
 
     calcToggle.addEventListener('click', () => {
       calcFloatingContainer.style.display = 'block';
-      calcToggle.style.display = 'none';
       if (!calculator) {
         // Embed Desmos calculator iframe
         const iframe = document.createElement('iframe');
@@ -328,7 +328,14 @@
       }
     });
 
-    container.appendChild(calcToggle);
+    // Create toolbar for calculator button
+    const quizToolbar = document.createElement('div');
+    quizToolbar.className = 'quiz-toolbar';
+    quizToolbar.style.display = 'flex';
+    quizToolbar.style.justifyContent = 'flex-end';
+    quizToolbar.style.marginBottom = '1rem';
+    quizToolbar.appendChild(calcToggle);
+    container.appendChild(quizToolbar);
 
     // render questions
     data.questions.forEach((q, i) => {
@@ -336,13 +343,30 @@
       const prompt = document.createElement('strong'); prompt.textContent = `${i+1}. ${q.prompt}`;
       const choicesWrap = document.createElement('div');
       q.choices.forEach((c, idx) => {
+        const letter = String.fromCharCode(65 + idx); // A, B, C, D, etc.
         const label = document.createElement('label');
-        label.style.display = 'block';
+        label.className = 'quiz-choice';
+        //label.style.display = 'block';
+        
+        const checkboxContainer = document.createElement('span');
+        checkboxContainer.className = 'checkbox-container';
+        
         const input = document.createElement('input');
         input.type = 'radio'; input.name = `q${i}`; input.value = String(idx);
         if (isPreview) input.disabled = true;
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(' ' + c));
+        
+        const letterSpan = document.createElement('span');
+        letterSpan.className = 'choice-letter';
+        letterSpan.textContent = letter;
+        
+        checkboxContainer.appendChild(input);
+        checkboxContainer.appendChild(letterSpan);
+        label.appendChild(checkboxContainer);
+        
+        const textSpan = document.createElement('span');
+        textSpan.className = 'choice-text';
+        textSpan.textContent = c;
+        label.appendChild(textSpan);
         choicesWrap.appendChild(label);
       });
       const res = document.createElement('div'); res.className = 'result'; res.id = `r${i}`;
@@ -552,7 +576,7 @@
         downloadBtn.textContent = 'Download Resource';
         downloadBtn.style.marginLeft = '0.5rem';
         downloadBtn.addEventListener('click', () => {
-          const title = qsParam('title') || 'download';
+          const title = assignment.title || 'download';
           const a = document.createElement('a');
           a.href = href;
           a.download = title;

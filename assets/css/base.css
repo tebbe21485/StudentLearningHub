@@ -218,7 +218,7 @@ progress#progress-bar.completed::-moz-progress-bar{
 #assignment-controls textarea {
   background: var(--secondaryColor);
   color: var(--primaryColor);
-  border: 1px solid var(--accentColor);
+  border: 2px solid var(--accentColor);
   padding: .5rem;
   border-radius: .5rem;
 }
