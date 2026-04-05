@@ -403,3 +403,16 @@ button:hover {
 .checkbox-container input[type="radio"]:checked + .choice-letter {
     color: var(--secondaryColor);
 }
+
+/* Bionic Reading Styles */
+.bionic-bold {
+    font-weight: 1000;
+    color: #132840;
+}
+
+/* Icon for Bionic Reading button */
+.bionic-reading-button svg {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
+}

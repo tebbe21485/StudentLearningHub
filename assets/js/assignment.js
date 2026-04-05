@@ -107,6 +107,7 @@
         pre.textContent = text; 
         pre.style.whiteSpace = 'pre-wrap';
         pre.style.border = '2px solid var(--accentColor)';
+        pre.style.fontWeight = '500';
         container.appendChild(pre);
         return;
       }
@@ -570,6 +571,16 @@
         const fsIncTop = document.createElement('button'); fsIncTop.type = 'button'; fsIncTop.textContent = 'Text size +';
         fsDecTop.style.marginRight = '0.5rem';
         
+        // Add Bionic Reading toggle button
+        const bionicBtn = document.createElement('button');
+        bionicBtn.type = 'button';
+        bionicBtn.className = 'bionic-reading-button';
+        bionicBtn.setAttribute('aria-label', 'Toggle Bionic Reading');
+        bionicBtn.setAttribute('aria-pressed', 'false');
+        bionicBtn.innerHTML = '◉ Bionic';
+        bionicBtn.style.marginLeft = '0.5rem';
+        //bionicBtn.style.marginRight = '0.5rem';
+        
         // Add download button
         const downloadBtn = document.createElement('button'); 
         downloadBtn.type = 'button'; 
@@ -585,7 +596,7 @@
           document.body.removeChild(a);
         });
         
-        if (toolbar) { toolbar.appendChild(fsDecTop); toolbar.appendChild(fsIncTop); toolbar.appendChild(downloadBtn); }
+        if (toolbar) { toolbar.appendChild(fsDecTop); toolbar.appendChild(fsIncTop); toolbar.appendChild(bionicBtn); toolbar.appendChild(downloadBtn); }
 
         // Notes and Done only for real assignments
         if (!isPreview && assignment.id) {
@@ -661,6 +672,104 @@
             size = Math.min(36, size + 1); pre.style.fontSize = size + 'px';
             if (!isPreview && assignment.id) { const a = loadAssignments(); const idx = a.findIndex(x=>x.id===assignment.id); if (idx!==-1){ a[idx].fontSize = size; saveAssignments(a); } }
             if (isPreview) { sessionStorage.setItem('preview-font-' + href, String(size)); }
+          });
+
+          // Bionic Reading functionality
+          const getBionicKey = () => isPreview ? 'preview-bionic-' + href : 'bionic-' + (assignment.id || href);
+          let isBionicEnabled = false;
+          let originalPreContent = pre.textContent;
+          
+          if (!isPreview && assignment.id) {
+            const a = loadAssignments();
+            const idx = a.findIndex(x=>x.id===assignment.id);
+            if (idx !== -1 && a[idx].bionicReading) isBionicEnabled = true;
+          } else if (isPreview) {
+            const saved = sessionStorage.getItem(getBionicKey());
+            if (saved === 'true') isBionicEnabled = true;
+          }
+          
+          const removeBionicFormatting = (element) => {
+            element.innerHTML = '';
+            element.textContent = originalPreContent;
+            element.style.whiteSpace = 'pre-wrap';
+            element.style.border = '2px solid var(--accentColor)';
+          };
+          
+          const applyBionicReading = (element, enabled) => {
+            if (!element) return;
+            if (!enabled) {
+              removeBionicFormatting(element);
+              return;
+            }
+            
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+            const nodesToProcess = [];
+            let node;
+            while (node = walker.nextNode()) {
+              nodesToProcess.push(node);
+            }
+            
+            nodesToProcess.forEach(textNode => {
+              const text = textNode.textContent;
+              if (!text.trim()) return;
+              
+              const fragment = document.createDocumentFragment();
+              const words = text.split(/(\s+)/);
+              
+              words.forEach(word => {
+                if (!word.trim()) {
+                  fragment.appendChild(document.createTextNode(word));
+                  return;
+                }
+                
+                const len = Math.ceil(word.length * 0.4);
+                const boldPart = document.createElement('span');
+                boldPart.className = 'bionic-bold';
+                boldPart.textContent = word.substring(0, len);
+                
+                const restPart = document.createTextNode(word.substring(len));
+                
+                fragment.appendChild(boldPart);
+                fragment.appendChild(restPart);
+              });
+              
+              textNode.parentNode.replaceChild(fragment, textNode);
+            });
+          };
+          
+          if (isBionicEnabled) {
+            applyBionicReading(pre, true);
+            bionicBtn.setAttribute('aria-pressed', 'true');
+            bionicBtn.style.backgroundColor = 'rgba(212, 106, 121, 0.3)';
+          }
+          
+          bionicBtn.addEventListener('click', () => {
+            isBionicEnabled = !isBionicEnabled;
+            
+            if (isBionicEnabled) {
+              // First clear and restore original content
+              removeBionicFormatting(pre);
+              originalPreContent = pre.textContent;
+              // Then apply bionic
+              applyBionicReading(pre, true);
+              bionicBtn.setAttribute('aria-pressed', 'true');
+              bionicBtn.style.backgroundColor = 'rgba(212, 106, 121, 0.3)';
+            } else {
+              applyBionicReading(pre, false);
+              bionicBtn.setAttribute('aria-pressed', 'false');
+              bionicBtn.style.backgroundColor = 'transparent';
+            }
+            
+            if (!isPreview && assignment.id) {
+              const a = loadAssignments();
+              const idx = a.findIndex(x=>x.id===assignment.id);
+              if (idx !== -1) {
+                a[idx].bionicReading = isBionicEnabled;
+                saveAssignments(a);
+              }
+            } else if (isPreview) {
+              sessionStorage.setItem(getBionicKey(), String(isBionicEnabled));
+            }
           });
         }, 80);
         // end text handling
