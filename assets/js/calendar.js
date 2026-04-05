@@ -20,7 +20,11 @@
     function fmt(d) {
       return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     }
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.subject)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent("Tutor: " + event.tutor)}`;
+    let location = event.location || "";
+    if (event.zoom_link) {
+      location = location ? `${location} with ${event.zoom_link}` : event.zoom_link;
+    }
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.subject)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent("Tutor: " + event.tutor)}&location=${encodeURIComponent(location)}`;
   }
 
   function formatIcs(event) {
