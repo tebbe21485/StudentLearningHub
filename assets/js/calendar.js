@@ -193,7 +193,14 @@
       const formattedTime = `${h12}:${String(mm).padStart(2, "0")} ${ampm}`;
 
       const location = document.getElementById("apt-location").value;
+      const zoomLink = document.getElementById("apt-zoom-link").value;
       const ev = { date, time: formattedTime, subject, tutor, location };
+      
+      // Add zoom link if provided
+      if (zoomLink) {
+        ev.zoom_link = zoomLink;
+      }
+      
       extraSessions.push(ev);
       saveExtraSessions(extraSessions);
       renderCalendar(allSessions(), offset);
@@ -207,6 +214,23 @@
   const detailsDone = document.getElementById("details-done");
   const detailsRemove = document.getElementById("details-remove");
   let currentEventData = null;
+
+  // Zoom meeting modal
+  const zoomModal = document.getElementById("zoom-meeting-modal");
+  const zoomClose = document.getElementById("zoom-close");
+  const zoomIframe = document.getElementById("zoom-iframe");
+  const zoomTitle = document.getElementById("zoom-meeting-title");
+
+  function openZoomModal(event) {
+    zoomTitle.textContent = event.subject;
+    zoomIframe.src = event.zoom_link;
+    zoomModal.classList.remove("hidden");
+  }
+
+  function closeZoomModal() {
+    zoomModal.classList.add("hidden");
+    zoomIframe.src = "";
+  }
 
   function openDetailsModal(event) {
     currentEventData = event;
@@ -223,6 +247,18 @@
     document.getElementById("details-google").href = googleLink;
     document.getElementById("details-ics").href = icsHref;
     document.getElementById("details-ics").download = fileName;
+
+    // Handle Live Link for online sessions
+    const liveLink = document.getElementById("details-live-link");
+    if (event.zoom_link) {
+      liveLink.style.display = "inline-block";
+      liveLink.onclick = (e) => {
+        e.preventDefault();
+        openZoomModal(event);
+      };
+    } else {
+      liveLink.style.display = "none";
+    }
 
     detailsModal.classList.remove("hidden");
   }
@@ -263,6 +299,18 @@
     detailsModal.addEventListener("click", (e) => {
       if (e.target === detailsModal) {
         closeDetailsModal();
+      }
+    });
+  }
+
+  if (zoomClose) {
+    zoomClose.addEventListener("click", closeZoomModal);
+  }
+
+  if (zoomModal) {
+    zoomModal.addEventListener("click", (e) => {
+      if (e.target === zoomModal) {
+        closeZoomModal();
       }
     });
   }

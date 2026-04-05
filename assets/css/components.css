@@ -225,7 +225,7 @@ button:hover {
     gap: 0.75rem;
     flex-wrap: wrap;
     align-items: stretch;
-    border-top: 1px solid var(--secondaryColor, #96aaca);
+    border-top: 1px solid var(--accentColor, #d46a79);
 }
 
 .modal-actions a {
@@ -243,9 +243,9 @@ button:hover {
 }
 
 .modal-actions .btn-primary {
-    background: var(--accentColor, #d46a79);
-    color: white;
-    flex: 1;
+    background: var(--secondaryColor, #96aaca);
+    color: var(--primaryColor, #132840);
+    flex: auto;
     min-width: 150px;
 }
 

@@ -73,6 +73,10 @@
             <label for="apt-location">Location</label>
             <input type="text" id="apt-location" placeholder="e.g. Math Center - Room 101" required />
           </div>
+          <div>
+            <label for="apt-zoom-link">Zoom Link (Optional)</label>
+            <input type="url" id="apt-zoom-link" placeholder="e.g. https://zoom.us/j/..." />
+          </div>
         </div>
         <div class="form-row">
           <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
@@ -104,11 +108,23 @@
         </div>
       </div>
       <div class="modal-actions">
+        <a id="details-live-link" class="btn-primary" style="display: none;">Live Link</a>
         <a id="details-google" target="_blank" class="btn-primary">Add to Google Calendar</a>
         <a id="details-ics" download class="btn-primary">Download .ics</a>
         <button id="details-remove" class="btn-remove">Remove</button>
         <button id="details-done" class="btn-secondary">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Zoom Meeting Modal -->
+  <div id="zoom-meeting-modal" class="modal hidden">
+    <div class="modal-content" style="max-width: 90vw; height: 90vh; padding: 0;">
+      <div class="modal-header">
+        <h2 id="zoom-meeting-title"></h2>
+        <button id="zoom-close" class="modal-close">&times;</button>
+      </div>
+      <iframe id="zoom-iframe" style="width: 100%; height: calc(90vh - 60px); border: none;"></iframe>
     </div>
   </div>
 
