@@ -52,6 +52,8 @@ img {
   text-decoration: none;
   color: inherit;
   font-weight: 700;
+  padding: .5rem .72rem;
+  margin: .5rem 0;
 }
 
 .nav {
